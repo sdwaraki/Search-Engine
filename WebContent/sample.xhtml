@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>CSE 598 - IR</title>
+</h:head>
+<h:body align="center">
+	<div style="text-align: center">
+		<h:graphicImage url="/images/image3.jpg" width="400" height="171" />
+	</div>
+	<h:form>
+		<br />
+		<div style="text-align: center">
+			<h:outputLabel value="Enter your search term here" for="acQuery"></h:outputLabel>
+			<p:autoComplete id="acQuery" value="#{searchBean.query}"
+				completeMethod="#{searchBean.complete}" />
+			<h:commandButton action="#{searchBean.makeSearch}" value="Search"></h:commandButton>
+			<h:outputText value="Consider including: #{searchBean.suggest}"/>
+		</div>
+		<h:panelGroup style="text-align:center">
+			<h:selectOneRadio style="align:center" value="#{searchBean.choice}">
+				<f:selectItem itemValue="1" itemLabel="TF-IDF" />
+				<f:selectItem itemValue="2" itemLabel="Authorities" />
+				<f:selectItem itemValue="3" itemLabel="Hubs" />
+				<f:selectItem itemValue="4" itemLabel="PageRank" />
+				<f:selectItem itemValue="5" itemLabel="Clusters" />
+			</h:selectOneRadio>
+		</h:panelGroup>
+		<br></br>
+		<div style="text-align: center">
+			<label> Enter 'w' value between 0 and 1 </label>
+
+			<h:inputText value="#{searchBean.w}"
+				style="width: 94px; align:center "></h:inputText>
+		</div>
+		<h:panelGroup rendered="#{searchBean.initial!=true}">
+			<h4>Result</h4>
+			<ui:param name="snippet" value="#{searchBean.snippet}"></ui:param>
+			<ui:repeat var="entry"
+				value="#{searchBean.result.entrySet().toArray()}">
+  DocID: <h:outputText>"#{entry.key}"</h:outputText>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+   URL: <h:outputLink value="#{entry.value}">
+					<h:outputText>"#{entry.value}"</h:outputText>
+					<h:outputText value="#{snippet[entry.key]}"></h:outputText>
+				</h:outputLink>
+				<br />
+			</ui:repeat>
+		</h:panelGroup>
+
+		<h:panelGroup>
+			<h:outputText value="Clusters" />
+			<ui:repeat var="cluster"
+				value="#{searchBean.clusterResult.entrySet().toArray()}">
+				<ui:param name="#{cluster.key}" value="list"></ui:param>
+				<ui:repeat var="docID" value="#{list}">
+					<h:outputText value="#{list}" />
+				</ui:repeat>
+			<h:outputText value="#{cluster.value}"/>
+			</ui:repeat>
+		</h:panelGroup>
+	</h:form>
+</h:body>
+</html>
